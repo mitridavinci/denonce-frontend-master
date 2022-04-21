@@ -1,0 +1,15 @@
+<h1>Marquer comme suivie</h1>
+<div class="container">
+  <div class="jumbotron">
+    <form action="" >
+      <div class="form-group">
+        <label for="statut">Statut</label>
+        <select class="form-control" name="statut" [(ngModel)]="denonciation.statut">
+          <option type="text" class="form-control" [ngValue]="true">Suivie</option>
+          <option type="text" class="form-control" [ngValue]="false">Non Suivie</option>
+        </select>
+      </div>
+      <input type="button" class="btn btn-primary" (click)="saveDenonciation()" value="Enregistrer">
+    </form>
+  </div>
+</div>

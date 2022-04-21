@@ -1,0 +1,106 @@
+
+<h1>Les Denonciations</h1>
+<div class="container">
+  <div class="jumbotron">
+    <div class="row">
+      <div class="col-md-4">
+        <form class="form-inline my-2 my-lg-0">
+          <input class="form-control mr-sm-2" type="search" (ngModelChange)="chercher()" [(ngModel)]="motCle" name="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success my-2 my-sm-0" (click)="chercher()"><i class="fas fa-search"></i></button>
+        </form>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <select class="form-control" [(ngModel)]="etablissement" (change)="setDenon(etablissement)" name="etablissement">
+            <option name="all" value="-1" >Tout les etablissement</option>
+            <option [(ngValue)]="etablissement.id" *ngFor="let etablissement of etablissements">{{ etablissement.nom }}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>Id</th>
+        <th>Etablissement</th>
+        <th>Niveau Scolaire</th>
+        <th>Type de denonciation</th>
+        <th>Date</th>
+        <th>Statut</th>
+        <th>Operations</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let denonciation of denonciations">
+        <td>{{ denonciation.id }}</td>
+        <td>{{ denonciation.etablissement?.nom }}</td>
+        <td>{{ denonciation.niveauScolaire?.nom }}</td>
+        <td>{{ denonciation.typeDenonciation?.nom }}</td>
+        <td>{{ denonciation.date }}</td>
+        <td>{{ (denonciation.statut == true) ? 'Suivie':'Non suivie' }}</td>
+        <td><a (click)="updateDenonciation(denonciation.id)" class="text-primary"><i class="fas fa-pencil-alt"></i></a>
+          &nbsp;&nbsp;
+          <a (click)="show(denonciation)" class="text-success" data-toggle="modal" data-target="#showVilleModal"><i class="fas fa-eye"></i></a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <div class="container">
+      <nav aria-label="Page navigation example">
+        <ul class="pagination">
+          <li class="page-item" [ngClass]="{'active':currentPage==(i)}" *ngFor="let page of pages; let i=index"><a class="page-link" (click)="goToPage(i)">{{ i+1 }}</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="showVilleModal" tabindex="-1" role="dialog" aria-labelledby="showDenoncLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="showDenoncLabel">Denonciation selectioné</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="nom">Etablissement</label>
+            <input *ngFor="let info of infoS" type="text" class="form-control" id="nomS" name="nomS" [(ngModel)]="info.etablissement.nom" disabled="disabled">
+          </div>
+          <div class="form-group">
+            <label for="nom">Niveau Scolaire</label>
+            <input *ngFor="let info of infoS" type="text" class="form-control" id="nomS" name="nomS" [(ngModel)]="info.niveauScolaire.nom" disabled="disabled">
+          </div>
+          <div class="form-group">
+            <label for="nom">Type de denonciation</label>
+            <input *ngFor="let info of infoS" type="text" class="form-control" id="nomS" name="nomS" [(ngModel)]="info.typeDenonciation.nom" disabled="disabled">
+          </div>
+          <div class="form-group">
+            <label for="nom">Sexe</label>
+            <input *ngFor="let info of infoS" type="text" class="form-control" id="nomS" name="nomS" [(ngModel)]="info.sexe" disabled="disabled">
+          </div>
+          <div class="form-group">
+            <label for="nom">Age</label>
+            <input *ngFor="let info of infoS" type="text" class="form-control" id="nomS" name="nomS" [(ngModel)]="info.age" disabled="disabled">
+          </div>
+          <div class="form-group">
+            <label for="nom">Personnes Concerne</label>
+            <input *ngFor="let info of infoS" type="text" class="form-control" id="nomS" name="nomS" [(ngModel)]="info.personneConcerne" disabled="disabled">
+          </div>
+          <div class="form-group">
+            <label for="nom">Niveau Scolaire</label>
+            <input *ngFor="let info of infoS" type="text" class="form-control" id="nomS" name="nomS" [(ngModel)]="info.niveauScolaire.nom" disabled="disabled">
+          </div>
+          <div class="form-group">
+            <label for="nom">Niveau Scolaire</label>
+            <textarea *ngFor="let info of infoS" type="text" class="form-control" id="nomS" name="nomS" [(ngModel)]="info.message" disabled="disabled">{{ info.message }}</textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</div>

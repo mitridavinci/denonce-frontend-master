@@ -1,0 +1,17 @@
+<div class="container">
+  <form #f="ngForm" class="form-signin" (ngSubmit)="onLogin(f.value)" >
+    <div class="alert alert-danger" *ngIf="error">
+      <span class="alert alert-danger" >Probleme de connexion</span>
+    </div>
+    <h2 class="form-signin-heading">Connectez vous</h2>
+    <p>
+      <label for="nom" class="sr-only">Nom</label>
+      <input type="text" id="nom" ngModel="" name="nom" class="form-control" placeholder="Votre nom" required autofocus>
+    </p>
+    <p>
+      <label for="password" class="sr-only">Password</label>
+      <input type="password" id="password" ngModel="" name="password" class="form-control" placeholder="Password" required>
+    </p>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Connexion</button>
+  </form>
+</div>

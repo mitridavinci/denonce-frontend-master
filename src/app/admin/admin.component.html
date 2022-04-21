@@ -1,0 +1,593 @@
+<header id="header">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-10 m-3">
+        <h1 class=""><i class="fas fa-cogs fa-2x"></i> Dashboard</h1>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section id="breadcrumb">
+  <div class="container">
+    <ol class="breadcrumb">
+      <li class="active">Dashboard / <span class="text-success">{{ dtype}}</span></li>
+    </ol>
+  </div>
+</section>
+
+<section id="d" class="jumbotron" *ngIf="dtype=='Region'">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3">
+        <div class="list-group">
+          <a href="" class="list-group-item active main-color-bg">
+            <i class="fas fa-cog fa-spin"></i> Votre Region
+          </a>
+          <a routerLink="/admin" class="list-group-item" *ngFor="let data of dataAd"><li>Id: <span class="text-danger">{{ data.id }}</span></li></a>
+          <a routerLink="/admin" class="list-group-item" *ngFor="let data of dataAd">
+            <li>Nom: <span class="text-danger">{{ data.nomFr }}</span></li>
+            <button (click)="setVille(data.id)" class="btn btn-primary">Plus de details <i class="fas fa-arrow-right"></i> </button>
+          </a>
+        </div>
+      </div>
+      <div class="col-md-9">
+        <div class="card">
+          <div class="card-header bg-primary text-white">
+            Aperçu du site
+          </div>
+          <div class="card-body">
+            <div class="row border-bottom border-primary">
+              <h4>Villes</h4>
+              <table class="table table-striped">
+                <thead>
+                <tr>
+                  <th>Id</th>
+                  <th>Nom</th>
+                  <th>Quartier</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let ville of villes">
+                  <td>{{ ville.id }}</td>
+                  <td>{{ ville.nom }}</td>
+                  <td><a (click)="setQuartier(ville.id)" class="text-primary" ><i class="fas fa-eye"></i></a></td>
+                </tr>
+                <tr *ngIf="r==false">Clique sur la fleche</tr>
+                <tr *ngIf="villes.length==0&&r==true">Pas de ville</tr>
+                </tbody>
+                <button class="btn btn-outline-primary" data-toggle="modal" data-target="#addVilleModal"><i class="fas fa-plus"></i> Ville</button>
+              </table>
+            </div>
+            <div class="row border-bottom border-primary">
+              <h4>Quartier</h4>
+              <table class="table table-striped">
+                <thead>
+                <tr>
+                  <th>Id</th>
+                  <th>Nom</th>
+                  <th>Ville</th>
+                  <th>Etablissement</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let quartier of quartiers">
+                  <td>{{ quartier.id }}</td>
+                  <td>{{ quartier.nom }}</td>
+                  <td>{{ quartier.ville?.nom }}</td>
+                  <td><a (click)="setEtab(quartier.id)" class="text-success"><i class="fas fa-eye"></i></a></td>
+                </tr>
+                <tr *ngIf="v==false">Clique sur l'oeil</tr>
+                <tr *ngIf="quartiers.length==0&&v==true">Pas de quartiers</tr>
+                </tbody>
+                <button class="btn btn-outline-primary" data-toggle="modal" data-target="#addQuartierModal"><i class="fas fa-plus"></i> Quartier</button>
+              </table>
+            </div>
+            <div class="row border-bottom border-primary">
+              <h4>Etablissement</h4>
+              <table class="table table-striped">
+                <thead>
+                <tr>
+                  <th>Id</th>
+                  <th>Nom</th>
+                  <th>Quartier</th>
+                  <th>Denonciations</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let etablissement of etablissements">
+                  <td>{{ etablissement.id }}</td>
+                  <td>{{ etablissement.nom }}</td>
+                  <td>{{ etablissement.quartier?.nom }}</td>
+                  <td><a (click)="setDenon(etablissement.id)" class="text-success"><i class="fas fa-eye"></i></a></td>
+                </tr>
+                <tr *ngIf="qt==false">Clique sur l'oeil</tr>
+                <tr *ngIf="etablissements.length==0&&qt==true">Pas d'etablissement</tr>
+                </tbody>
+                <button class="btn btn-outline-primary" data-toggle="modal" data-target="#addEtabModal"><i class="fas fa-plus"></i> Etab</button>
+              </table>
+            </div>
+            <div class="row border-bottom border-primary">
+              <h4>Denonciation</h4>
+              <table class="table table-striped">
+                <thead>
+                <tr>
+                  <th>Id</th>
+                  <th>Etablissement</th>
+                  <th>Date</th>
+                  <th>Statut</th>
+                  <th>Operation</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let denonciation of denonciations">
+                  <td>{{ denonciation.id }}</td>
+                  <td>{{ denonciation.etablissement?.nom }}</td>
+                  <td>{{ denonciation.date }}</td>
+                  <td>{{ (denonciation.statut == true) ? 'Suivie':'Non suivie' }}</td>
+                  <td><a (click)="update(denonciation)" class="text-success" data-toggle="modal" data-target="#updateDenonModal"><i class="fas fa-pencil-alt"></i></a></td>
+                </tr>
+                <tr *ngIf="et==false">Clique sur l'oeil</tr>
+                <tr *ngIf="denonciations.length==0&&et==true">Pas de denonciations</tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <br><br>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="main" class="jumbotron" *ngIf="dtype=='Ville'">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3">
+        <div class="list-group">
+          <a href="" class="list-group-item active main-color-bg">
+            <i class="fas fa-cog fa-spin"></i> Votre Ville
+          </a>
+          <a routerLink="/admin" class="list-group-item" *ngFor="let data of dataAd"><li>Id: <span class="text-danger">{{ data.id }}</span></li></a>
+          <a routerLink="/admin" class="list-group-item" *ngFor="let data of dataAd"><li>Nom: <span class="text-danger">{{ data.nom }}</span></li></a>
+          <a routerLink="/admin" class="list-group-item" *ngFor="let data of dataAd">
+            <li>Region: <span class="text-danger">{{ data.region?.nomFr }}</span></li>
+            <br>
+            <button (click)="setQuartier(data.id)" class="btn btn-primary">Plus de details <i class="fas fa-arrow-right"></i> </button>
+          </a>
+        </div>
+      </div>
+      <div class="col-md-9">
+        <div class="card">
+          <div class="card-header bg-primary text-white">
+            Aperçu du site
+          </div>
+          <div class="card-body">
+            <div class="row border-bottom border-primary">
+              <h4>Quartier</h4>
+              <table class="table table-striped">
+                <thead>
+                <tr>
+                  <th>Id</th>
+                  <th>Nom</th>
+                  <th>Ville</th>
+                  <th>Etablissement</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let quartier of quartiers">
+                  <td>{{ quartier.id }}</td>
+                  <td>{{ quartier.nom }}</td>
+                  <td>{{ quartier.ville?.nom }}</td>
+                  <td><a (click)="setEtab(quartier.id)" class="text-success"><i class="fas fa-eye"></i></a></td>
+                </tr>
+                <tr *ngIf="v==false">Clique sur la fleche</tr>
+                <tr *ngIf="quartiers.length==0&&v==true">Pas de quartiers</tr>
+                </tbody>
+                <button class="btn btn-outline-primary" data-toggle="modal" data-target="#addQuartierModal"><i class="fas fa-plus"></i> Quartier</button>
+              </table>
+            </div>
+            <div class="row border-bottom border-primary">
+              <h4>Etablissement</h4>
+              <table class="table table-striped">
+                <thead>
+                <tr>
+                  <th>Id</th>
+                  <th>Nom</th>
+                  <th>Quartier</th>
+                  <th>Denonciations</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let etablissement of etablissements">
+                  <td>{{ etablissement.id }}</td>
+                  <td>{{ etablissement.nom }}</td>
+                  <td>{{ etablissement.quartier?.nom }}</td>
+                  <td><a (click)="setDenon(etablissement.id)" class="text-success"><i class="fas fa-eye"></i></a></td>
+                </tr>
+                <tr *ngIf="qt==false">Clique sur l'oeil</tr>
+                <tr *ngIf="etablissements.length==0&&qt==true">Pas d'etablissement</tr>
+                </tbody>
+                <button class="btn btn-outline-primary" data-toggle="modal" data-target="#addEtabModal"><i class="fas fa-plus"></i> Etab</button>
+              </table>
+            </div>
+            <div class="row border-bottom border-primary">
+              <h4>Denonciation</h4>
+              <table class="table table-striped">
+                <thead>
+                <tr>
+                  <th>Id</th>
+                  <th>Etablissement</th>
+                  <th>Date</th>
+                  <th>Statut</th>
+                  <th>Operations</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let denonciation of denonciations">
+                  <td>{{ denonciation.id }}</td>
+                  <td>{{ denonciation.etablissement?.nom }}</td>
+                  <td>{{ denonciation.date }}</td>
+                  <td>{{ (denonciation.statut == true) ? 'Suivie':'Non suivie' }}</td>
+                  <td><a (click)="update(denonciation)" class="text-success" data-toggle="modal" data-target="#updateDenonModal"><i class="fas fa-pencil-alt"></i></a></td>
+                </tr>
+                <tr *ngIf="et==false">Clique sur l'oeil</tr>
+                <tr *ngIf="denonciations.length==0&&et==true">Pas de denonciations</tr>
+                </tbody>
+              </table>
+              </div>
+            </div>
+          </div>
+        <br><br>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="main" class="jumbotron" *ngIf="dtype=='Quartier'">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3">
+        <div class="list-group">
+          <a href="" class="list-group-item active main-color-bg">
+            <i class="fas fa-cog fa-spin"></i> Votre Quartier
+          </a>
+          <a routerLink="/admin" class="list-group-item" *ngFor="let data of dataAd"><li>Id: <span class="text-danger">{{ data.id }}</span></li></a>
+          <a routerLink="/admin" class="list-group-item" *ngFor="let data of dataAd"><li>Nom: <span class="text-danger">{{ data.nom }}</span></li></a>
+          <a routerLink="/admin" class="list-group-item" *ngFor="let data of dataAd">
+            <li>Ville: <span class="text-danger">{{ data.ville?.nom }}</span></li>
+            <br>
+            <button (click)="setEtab(data.id)" class="btn btn-primary">Plus de details <i class="fas fa-arrow-right"></i> </button>
+          </a>
+        </div>
+      </div>
+      <div class="col-md-9">
+        <div class="card">
+          <div class="card-header bg-primary text-white">
+            Aperçu du site
+          </div>
+          <div class="card-body">
+            <div class="row border-bottom border-primary">
+              <h4>Etablissement</h4>
+              <table class="table table-striped">
+                <thead>
+                <tr>
+                  <th>Id</th>
+                  <th>Nom</th>
+                  <th>Quartier</th>
+                  <th>Denonciations</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let etablissement of etablissements">
+                  <td>{{ etablissement.id }}</td>
+                  <td>{{ etablissement.nom }}</td>
+                  <td>{{ etablissement.quartier?.nom }}</td>
+                  <td><a (click)="setDenon(etablissement.id)" class="text-success"><i class="fas fa-eye"></i></a></td>
+                </tr>
+                <tr *ngIf="qt==false">Clique sur la fleche</tr>
+                <tr *ngIf="etablissements.length==0&&qt==true">Pas d'etablissement</tr>
+                </tbody>
+                <button class="btn btn-outline-primary" data-toggle="modal" data-target="#addEtabModal"><i class="fas fa-plus"></i> Etab</button>
+              </table>
+            </div>
+            <div class="row border-bottom border-primary">
+              <h4>Denonciation</h4>
+              <table class="table table-striped">
+                <thead>
+                <tr>
+                  <th>Id</th>
+                  <th>Etablissement</th>
+                  <th>Date</th>
+                  <th>Statut</th>
+                  <th>Operation</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let denonciation of denonciations">
+                  <td>{{ denonciation.id }}</td>
+                  <td>{{ denonciation.etablissement?.nom }}</td>
+                  <td>{{ denonciation.date }}</td>
+                  <td>{{ (denonciation.statut == true) ? 'Suivie':'Non suivie' }}</td>
+                  <td><a (click)="update(denonciation)" class="text-success" data-toggle="modal" data-target="#updateDenonModal"><i class="fas fa-pencil-alt"></i></a></td>
+                </tr>
+                <tr *ngIf="et==false">Clique sur l'oeil</tr>
+                <tr *ngIf="denonciations.length==0&&et==true">Pas de denonciations</tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <br><br>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="main" class="jumbotron" *ngIf="dtype=='Etablissement'">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3">
+        <div class="list-group">
+          <a href="" class="list-group-item active main-color-bg">
+            <i class="fas fa-cog fa-spin"></i> Votre Etablissement
+          </a>
+          <a routerLink="/admin" class="list-group-item" *ngFor="let data of dataAd"><li>Id: <span class="text-danger">{{ data.id }}</span></li></a>
+          <a routerLink="/admin" class="list-group-item" *ngFor="let data of dataAd"><li>Nom: <span class="text-danger">{{ data.nom }}</span></li></a>
+          <a routerLink="/admin" class="list-group-item" *ngFor="let data of dataAd">
+            <li>Quartier: <span class="text-danger">{{ data.quartier?.nom }}</span></li>
+            <br>
+            <button (click)="setDenon(data.id)" class="btn btn-primary">Plus de details <i class="fas fa-arrow-right"></i> </button>
+          </a>
+        </div>
+      </div>
+      <div class="col-md-9">
+        <div class="card">
+          <div class="card-header bg-primary text-white">
+            Aperçu du site
+          </div>
+          <div class="card-body">
+            <div class="row border-bottom border-primary">
+              <h4>Denonciation</h4>
+              <table class="table table-striped">
+                <thead>
+                <tr>
+                  <th>Id</th>
+                  <th>Etablissement</th>
+                  <th>Date</th>
+                  <th>Statut</th>
+                  <th>Operation</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let denonciation of denonciations">
+                  <td>{{ denonciation.id }}</td>
+                  <td>{{ denonciation.etablissement?.nom }}</td>
+                  <td>{{ denonciation.date }}</td>
+                  <td>{{ (denonciation.statut == true) ? 'Suivie':'Non suivie' }}</td>
+                  <td><a (click)="update(denonciation)" class="text-success" data-toggle="modal" data-target="#updateDenonModal"><i class="fas fa-pencil-alt"></i></a></td>
+                </tr>
+                <tr *ngIf="et==false">Clique sur la fleche</tr>
+                <tr *ngIf="denonciations.length==0&&et==true">Pas de denonciations</tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <br><br>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<section id="main" class="jumbotron" *ngIf="dtype=='ADMIN'">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3">
+        <div class="list-group">
+          <a href="" class="list-group-item active main-color-bg">
+            <i class="fas fa-cog fa-spin"></i> Dashboard
+          </a>
+          <a href="" routerLink="/ville" class="list-group-item">Villes <span class="badge badge-danger float-right">{{ villes?.length }}</span></a>
+          <a href="" routerLink="/quartier" class="list-group-item">Quartiers <span class="badge badge-danger float-right">{{ quartiers.length }}</span></a>
+          <a href="" routerLink="/etablissement" class="list-group-item">Etablissements <span class="badge badge-danger float-right">{{ etablissements.length }}</span></a>
+          <a href="" routerLink="/denonciation" class="list-group-item">Denonciations <span class="badge badge-danger float-right">{{ denonciations.length }}</span></a>
+          <a href="" routerLink="/user" class="list-group-item">Utilisateurs <span class="badge badge-danger float-right">{{ admins.length }}</span></a>
+        </div>
+      </div>
+      <div class="col-md-9">
+        <div class="card">
+          <div class="card-header bg-primary text-white">
+            Aperçu du site
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-4">
+                <div class="well dash-box">
+                  <h2><i class="fas fa-city"></i> {{ villes?.length }}</h2>
+                  <h4>Villes</h4>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="well dash-box">
+                  <h2><i class="fas fa-building"></i> {{ quartiers.length }}</h2>
+                  <h4>Quartiers</h4>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="well dash-box">
+                  <h2><i class="fas fa-university"></i> {{ etablissements.length }}</h2>
+                  <h4>Etablissements</h4>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="well dash-box">
+                  <h2><i class="fas fa-envelope"></i> {{ denonciations.length }}</h2>
+                  <h4>Denonciations</h4>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="well dash-box">
+                  <h2><i class="fas fa-envelope"></i> {{ ns }}</h2>
+                  <h4>Non Suivies</h4>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="well dash-box">
+                  <h2><i class="fas fa-envelope"></i> {{ s }}</h2>
+                  <h4>Suivies</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <br><br>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Modal -->
+<div class="modal fade" id="addVilleModal" tabindex="-1" role="dialog" aria-labelledby="addVilleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addVilleModalLabel">Ajouter une ville</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #f="ngForm" (ngSubmit)="addVille(f.value)" action="" >
+          <div class="form-group">
+            <label for="region">Region</label>
+            <select ngModel class="form-control" name="region" required="">
+              <option [(ngValue)]="data" *ngFor="let data of dataAd">{{ data.nomFr }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="nom">Nom</label>
+            <input type="text" class="form-control" id="nom" name="nom" ngModel required="">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary"  data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary" [disabled]="f.invalid">Ajouter</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="addQuartierModal" tabindex="-1" role="dialog" aria-labelledby="addQuartierModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addQuartierModalLabel">Ajouter un Quartier</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #q="ngForm" (ngSubmit)="addQuartier(q.value)" action="" >
+          <div class="form-group" *ngIf="dtype=='Region'">
+            <label for="ville">Ville</label>
+            <select ngModel class="form-control" name="ville" required="">
+              <option [(ngValue)]="ville" *ngFor="let ville of villes">{{ ville.nom }}</option>
+            </select>
+          </div>
+          <div class="form-group" *ngIf="dtype=='Ville'">
+            <label for="ville">Ville</label>
+            <select ngModel class="form-control" name="ville" required="">
+              <option [(ngValue)]="data" *ngFor="let data of dataAd">{{ data.nom }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="nom">Nom</label>
+            <input type="text" class="form-control" id="nom" name="nom" required="" ngModel>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary"  data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Ajouter</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="addEtabModal" tabindex="-1" role="dialog" aria-labelledby="addEtabModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addEtabModalLabel">Ajouter un Etablissement</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #e="ngForm" (ngSubmit)="addEtablissement(e.value)" >
+          <div class="form-group" *ngIf="dtype=='Quartier'">
+            <label for="quartier">Quartier</label>
+            <select ngModel id="quartier" class="form-control" name="quartier">
+              <option [(ngValue)]="data" *ngFor="let data of dataAd">{{ data.nom }}</option>
+            </select>
+          </div>
+          <div class="form-group" *ngIf="dtype!='Quartier'">
+            <label for="quartier">Quartier</label>
+            <select ngModel id="quartier" class="form-control" name="quartier">
+              <option [(ngValue)]="quartier" *ngFor="let quartier of quartiers">{{ quartier.nom }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="nom">Nom</label>
+            <input type="text" class="form-control" id="nom" name="nom" ngModel required="" >
+          </div>
+          <div class="form-group">
+            <label for="tel">Tel</label>
+            <input type="text" class="form-control" id="tel" name="tel" ngModel required="">
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" name="email" required="" ngModel email>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary"  data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Ajouter</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="updateDenonModal" tabindex="-1" role="dialog" aria-labelledby="showDenoncLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="showDenoncLabel">Modifier Dénonciation</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #u="ngForm">
+          <div class="form-group">
+            <label for="statut">Statut</label>
+            <select class="form-control" name="statut" ngModel required="" >
+              <option type="text" class="form-control"></option>
+              <option type="text" class="form-control" [ngValue]="true">Suivie</option>
+              <option type="text" class="form-control" [ngValue]="false">Non Suivie</option>
+            </select>
+          </div>
+          <input type="button" class="btn btn-primary" (click)="saveDenonciation(u.value.statut)" value="Enregistrer">
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,152 @@
+<h1>Les Etablissements</h1>
+<div class="container">
+  <div class="jumbotron">
+    <div class="row">
+      <div class="col-md-4">
+        <!-- Button trigger modal -->
+        <button class="btn btn-primary" data-toggle="modal" data-target="#addEtabModal"><i class="fas fa-plus"></i> Etablissement</button>
+      </div>
+      <div class="col-md-4">
+        <form class="form-inline my-2 my-lg-0">
+          <input class="form-control mr-sm-2" type="search" (ngModelChange)="chercher()" [(ngModel)]="motCle" name="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success my-2 my-sm-0" (click)="chercher()"><i class="fas fa-search"></i></button>
+        </form>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <select class="form-control" name="quartier" [(ngModel)]="quartier" (change)="setEtab(quartier)" >
+            <option value="-1" name="all" >Tout Quartiers</option>
+            <option [(ngValue)]="quartier.id" *ngFor="let quartier of quartiers">{{ quartier.nom }}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>Id</th>
+        <th>Nom</th>
+        <th>Quartier</th>
+        <th>Telephone</th>
+        <th>Email</th>
+        <th>Operations</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let etablissement of etablissements">
+        <td>{{ etablissement.id }}</td>
+        <td>{{ etablissement.nom }}</td>
+        <td>{{ etablissement.quartier?.nom }}</td>
+        <td>{{ etablissement.tel }}</td>
+        <td>{{ etablissement.email }}</td>
+        <td><a (click)="updateEtablissement(etablissement.id)" class="text-primary" ><i class="fas fa-pencil-alt"></i></a>
+          &nbsp;&nbsp;
+          <a (click)="delEtablissement(etablissement)" class="text-danger"><i class="fas fa-trash"></i></a>
+          &nbsp;&nbsp;
+          <a (click)="show(etablissement)" class="text-success" data-toggle="modal" data-target="#showEtabModal"><i class="fas fa-eye"></i></a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <div class="container">
+      <nav aria-label="Page navigation example">
+        <ul class="pagination">
+          <li class="page-item" [ngClass]="{'active':currentPage==(i)}" *ngFor="let page of pages; let i=index"><a class="page-link" (click)="goToPage(i)">{{ i+1 }}</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="addEtabModal" tabindex="-1" role="dialog" aria-labelledby="addEtabModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addEtabModalLabel">Ajouter un Etablissement</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="region">Region</label>
+            <select [(ngModel)]="region" (change)="setVille(region)" id="region" class="form-control" name="region">
+              <option [(ngValue)]="region.id" *ngFor="let region of regions">{{ region.nomFr }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="ville">Ville</label>
+            <select [(ngModel)]="ville" id="ville" (change)="setQuartier(ville)" class="form-control" name="ville">
+              <option [(ngValue)]="ville.id" *ngFor="let ville of villes">{{ ville.nom }}</option>
+            </select>
+          </div>
+          <form #f="ngForm" (ngSubmit)="addEtablissement(f.value)" >
+            <div *ngIf="errors" class="alert alert-danger alert-dismissible fade show">
+              <li *ngFor="let error of errors">
+                {{ error }}
+              </li>
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="form-group">
+              <label for="quartier">Quartier</label>
+              <select ngModel id="quartier" class="form-control" name="quartier">
+                <option [(ngValue)]="quartier" *ngFor="let quartier of quartiers">{{ quartier.nom }}</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="nom">Nom</label>
+              <input type="text" class="form-control" id="nom" name="nom" ngModel required="" >
+            </div>
+            <div class="form-group">
+              <label for="tel">Tel</label>
+              <input type="text" class="form-control" id="tel" name="tel" ngModel required="">
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" class="form-control" id="email" name="email" required="" ngModel email>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary"  data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Ajouter</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="showEtabModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Etablissement selectioné</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="nom">Nom</label>
+            <input *ngFor="let info of infoS" type="text" class="form-control" [(ngModel)]="info.nom" disabled="disabled">
+          </div>
+          <div class="form-group">
+            <label for="nom">Quartier</label>
+            <input *ngFor="let info of infoS" type="text" class="form-control" [(ngModel)]="info.quartier.nom" disabled="disabled">
+          </div>
+          <div class="form-group">
+            <label for="nom">Ville</label>
+            <input *ngFor="let info of infoS" type="text" class="form-control" [(ngModel)]="info.quartier.ville.nom" disabled="disabled">
+          </div>
+          <div class="form-group">
+            <label for="nom">Region</label>
+            <input *ngFor="let info of infoS" type="text" class="form-control" [(ngModel)]="info.quartier.ville.region.nomFr" disabled="disabled">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

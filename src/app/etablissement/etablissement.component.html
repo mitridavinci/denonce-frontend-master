@@ -1,0 +1,80 @@
+<h1>Modifier un Etablissement</h1>
+<div class="container">
+  <div class="jumbotron">
+    <form action="" >
+      <div *ngIf="errors" class="alert alert-danger alert-dismissible fade show">
+        <li *ngFor="let error of errors">
+          {{ error }}
+        </li>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="form-group">
+        <label for="nom">Nom</label>
+        <input type="text" class="form-control" name="nom" [(ngModel)]="etablissement.nom"  >
+      </div>
+      <div class="form-group">
+        <label for="tel">Telephone</label>
+        <input type="text" class="form-control" name="tel" [(ngModel)]="etablissement.tel"  >
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" class="form-control" name="email" [(ngModel)]="etablissement.email"  >
+      </div>
+      <input type="button" class="btn btn-primary" (click)="saveEtablissement()" value="Enregistrer">
+    </form>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<!-- <h1>Ajouter un etablissemnt !</h1>
+<div class="container">
+  <form action="">
+    <div class="form-group">
+      <label for="region">Region</label>
+      <select class="form-control" id="region">
+        <option>Ouest</option>
+        <option>Nord</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="ville">Ville</label>
+      <select class="form-control" id="ville">
+        <option>Dschang</option>
+        <option>Bamenda</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="quartier">Quartier</label>
+      <select class="form-control" id="quartier">
+        <option>Quartier 1</option>
+        <option>Quartier 2</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="nom">Nom</label>
+      <input type="text" class="form-control" id="nom">
+    </div>
+    <div class="form-group">
+      <label for="tel">Telephone</label>
+      <input type="text" class="form-control" id="tel">
+    </div>
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email" class="form-control" id="email">
+    </div>
+    <br>
+    <input type="submit" class="btn btn-success" value="Enregistrer">
+  </form>
+</div>
+-->

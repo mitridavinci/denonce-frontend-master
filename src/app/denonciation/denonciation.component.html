@@ -1,0 +1,110 @@
+
+<h1>Denoncer un probleme !</h1>
+<div class="container">
+  <div class="">
+  <div id="stepwizard">
+    <ul class="">
+      <li><a href="#step1">Etape 1 <br> <small>Votre Localisation</small></a></li>
+      <li><a href="#step2">Etape 2 <br><small>Informations scolaires</small></a></li>
+      <li><a href="#step3">Etape 3 <br><small>Information sur vous</small></a></li>
+      <li><a href="#step4">Etape 4 <br><small>Information de la denonciation</small></a></li>
+    </ul>
+    <div>
+      <div id="step1">
+              <div class="form-group">
+                <label for="region">Region</label>
+                <select [(ngModel)]="region" (change)="setVille(region)" id="region" class="form-control" name="region" required="required">
+                  <option></option>
+                  <option [(ngValue)]="region.id" *ngFor="let region of regions">{{ region.nomFr }}</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="ville">Ville</label>
+                <select [(ngModel)]="ville" id="ville" (change)="setQuartier(ville)" class="form-control" name="ville">
+                  <option></option>
+                  <option [(ngValue)]="ville.id" *ngFor="let ville of villes">{{ ville.nom }}</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="quartier">Quartier</label>
+                <select [(ngModel)]="quartier" (change)="setEtab(quartier)" id="quartier" class="form-control" name="quartier">
+                  <option></option>
+                  <option [(ngValue)]="quartier.id" *ngFor="let quartier of quartiers">{{ quartier.nom }}</option>
+                </select>
+              </div>
+      </div>
+      <div id="step2">
+        <div class="form-group">
+          <label for="etablissement">Etablissement</label>
+          <select [(ngModel)]="denonciation.etablissement" id="etablissement" class="form-control" name="etablissement">
+            <option></option>
+            <option [(ngValue)]="etablissement" *ngFor="let etablissement of etablissements">{{ etablissement.nom }}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="niveau_scolaire">Niveau Scolaire</label>
+          <select [(ngModel)]="denonciation.niveauScolaire" id="niveauScolaire" class="form-control" name="niveauScolaire">
+            <option [(ngValue)]="niveauScolaire" *ngFor="let niveauScolaire of niveauScolaires">{{ niveauScolaire.nom }}</option>
+          </select>
+        </div>
+      </div>
+      <div id="step3">
+        <div class="form-group">
+          <label for="sexe">Sexe</label>
+          <div>
+            <input type="radio" [(ngModel)]="denonciation.sexe" id="masculin" name="sexe" value="masculin">
+            <label for="masculin">&nbsp;Masculin</label> <br>
+            <input type="radio" [(ngModel)]="denonciation.sexe" id="feminin" name="sexe" value="feminin">
+            <label for="feminin">&nbsp;Feminin</label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="age">Age</label>
+          <input name="age" [(ngModel)]="denonciation.age" type="number" class="form-control" id="age">
+        </div>
+      </div>
+      <div id="step4">
+        <div class="form-group">
+          <label for="type_denonciation">Type de denonciation</label>
+          <select [(ngModel)]="denonciation.typeDenonciation" id="typeDenonciation" class="form-control" name="typeDenonciation">
+            <option [(ngValue)]="typeDenonciation" *ngFor="let typeDenonciation of typeDenonciations">{{ typeDenonciation.nom }}</option>
+          </select>
+        </div>
+        <div class="form-group" *ngIf="autre">
+          <label for="ii">Preciser</label>
+          <input placeholder="type de denonciation ..." [(ngModel)]="denonciation.typeDenonciation" type="text" class="form-control" name="typeDenonciation">
+        </div>
+        <div class="form-group">
+          <label for="personne_concerne">Personnes concernées</label>
+          <select (change)="setAutreP(denonciation.personneConcerne)" [(ngModel)]="denonciation.personneConcerne" id="personneConcerne" class="form-control" name="typeDenonciation">
+            <option selected value="Professeur">Professeur</option>
+            <option value="Camarade">Camarade</option>
+            <option value="Administration">Administration</option>
+            <option value="Vendeur">Vendeur</option>
+            <option value="">Autre</option>
+          </select>
+        </div>
+        <div class="container" *ngIf="pautre==true">
+          <input [(ngModel)]="denonciation.personneConcerne" type="text" placeholder="preciser !" class="form-control" name="personneConcerne">
+        </div>
+        <br>
+        <label for="message">Message</label>
+        <div class="form-group">
+          <textarea name="message" [(ngModel)]="denonciation.message" class="form-control" id="message" rows="3"></textarea>
+        </div>
+        <div *ngIf="errors" class="alert alert-danger alert-dismissible fade show">
+          <li *ngFor="let error of errors">
+            {{ error }}
+          </li>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      <input type="submit" (click)="denoncer()" value="Denoncer" class="btn btn-success">
+    </div>
+  </div>
+  </div>
+</div>
+</div>
+
+
